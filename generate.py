@@ -9,9 +9,10 @@ asn_numbers = ["AS32934", "AS13335"]
 def lookup_asn(asn):
     url = f"https://api.bgpview.io/asn/{asn}/prefixes"
     response = requests.get(url)
-    data = response.json()
     print(f"Lookup for {asn} returned {response.status_code}")
     print(f"Data: {data}")
+    data = response.json()
+
     return data
 
 # Generate routing commands
