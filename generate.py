@@ -1,4 +1,5 @@
 import requests
+import os
 from netaddr import IPSet, IPNetwork
 
 # List of ASN numbers to lookup
@@ -71,6 +72,9 @@ html_content = """
 </html>
 """.format(networks_js=networks_js)
 
+# Make a folder called out if it doesn't exist
+if not os.path.exists("out"):
+    os.makedirs("out")
 # Write HTML content to file
-with open("routes.html", "w") as file:
+with open("out/index.html", "w") as file:
     file.write(html_content)
