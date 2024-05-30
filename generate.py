@@ -21,6 +21,9 @@ for asn in asn_numbers:
 # Merge overlapping prefixes
 aggregated_networks = list(networks.iter_cidrs())
 
+# Create the networks_js variable
+networks_js = [str(network) for network in aggregated_networks]
+
 # Create HTML content with JavaScript
 html_content = """
 <!DOCTYPE html>
@@ -49,8 +52,8 @@ html_content = """
 
         function generateCommands() {{
             const routeIp = document.getElementById('route-ip').value;
-            const addCommands = networks.map(network => `sudo route -n add -net ${network} ${routeIp}`).join('\\n');
-            const deleteCommands = networks.map(network => `sudo route -n delete -net ${network} ${routeIp}`).join('\\n');
+            const addCommands = networks.map(network => `sudo route -n add -net ${{network}} ${{routeIp}}`).join('\\n');
+            const deleteCommands = networks.map(network => `sudo route -n delete -net ${{network}} ${{routeIp}}`).join('\\n');
             document.getElementById('add-commands').textContent = addCommands;
             document.getElementById('delete-commands').textContent = deleteCommands;
         }}
@@ -66,7 +69,7 @@ html_content = """
     </script>
 </body>
 </html>
-""".format(networks_js=[str(network) for network in aggregated_networks])
+""".format(networks_js=networks_js)
 
 # Write HTML content to file
 with open("routes.html", "w") as file:
