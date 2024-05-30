@@ -7,10 +7,8 @@ asn_numbers = ["AS32934", "AS13335"]
 
 # Function to lookup ASN details
 def lookup_asn(asn):
-    url = f"https://api.bgpview.io/asn/{asn}/prefixes"
+    url = f"https://prefixes-cors-proxy.cc.workers.dev/{asn}"
     response = requests.get(url)
-    print(f"Lookup for {asn} returned {response.status_code}")
-    print(f"Data: {data}")
     data = response.json()
 
     return data
@@ -46,11 +44,11 @@ html_content = """
     <button onclick="generateCommands()">Generate Add Routes</button>
     <button onclick="generateDeleteCommands()">Generate Delete Routes</button>
     <h2>Add Routes</h2>
-    <div id="add-commands" class="code-block"></div>
     <button class="copy-button" onclick="copyToClipboard('add-commands')">Copy to Clipboard</button>
+    <div id="add-commands" class="code-block"></div>
     <h2>Delete Routes</h2>
-    <div id="delete-commands" class="code-block"></div>
     <button class="copy-button" onclick="copyToClipboard('delete-commands')">Copy to Clipboard</button>
+    <div id="delete-commands" class="code-block"></div>
     <script>
         const networks = {networks_js};
 
