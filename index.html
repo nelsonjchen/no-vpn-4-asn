@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Routing Commands</title>
+    <style>
+        .code-block { background-color: #f4f4f4; border: 1px solid #ddd; padding: 10px; margin: 10px 0; white-space: pre-wrap; }
+        .copy-button { margin-left: 10px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Routing Commands</h1>
+    <label for="route-ip">Enter Router IP:</label>
+    <input type="text" id="route-ip" name="route-ip">
+    <button onclick="generateCommands()">Generate Add Routes</button>
+    <button onclick="generateDeleteCommands()">Generate Delete Routes</button>
+    <h2>Add Routes</h2>
+    <div id="add-commands" class="code-block"></div>
+    <button class="copy-button" onclick="copyToClipboard('add-commands')">Copy to Clipboard</button>
+    <h2>Delete Routes</h2>
+    <div id="delete-commands" class="code-block"></div>
+    <button class="copy-button" onclick="copyToClipboard('delete-commands')">Copy to Clipboard</button>
+    <script src="./ip-num.js"></script>
+
+    <script>
+        const asns = ["AS32934", "AS13335"];
+        async function fetchAsnData(asn) {
+            const response = await fetch(`https://prefixes-cors-proxy.cc.workers.dev/${asn}`);
+            const data = await response.json();
+            return data.data.ipv4_prefixes.map(prefix => prefix.prefix);
+        }
+
+        function aggregateNetworks(networks) {
+            // Using ip-num library to aggregate IP networks
+            let arrays = [];
+
+            for (let i = 0; i < networks.length; i++) {
+              arrays.push(
+                ipnum.RangedSet.fromCidrRange(
+                  ipnum.IPv4CidrRange.fromCidr(networks[i])
+                )
+              );
+            }
+
+            let pool = ipnum.Pool.fromRangeSet(arrays);
+            let aggregatedPool = pool.aggregate();
+            let ranges = aggregatedPool.getRanges()
+            // Run them through
+            // ranges[0].toCidrRange().toCidrString()
+            // to get the CIDR notation
+            let cidrRanges = ranges.map(range => range.toCidrRange().toCidrString());
+            return cidrRanges;
+        }
+
+        async function generateCommands() {
+            let networks = [];
+
+            for (const asn of asns) {
+                const prefixes = await fetchAsnData(asn);
+                networks = networks.concat(prefixes);
+            }
+
+            const aggregatedNetworks = aggregateNetworks(networks);
+            const routeIp = document.getElementById('route-ip').value;
+            const addCommands = aggregatedNetworks.map(network => `sudo route -n add -net ${network} ${routeIp}`).join('\n');
+            document.getElementById('add-commands').textContent = addCommands;
+        }
+
+        async function generateDeleteCommands() {
+            let networks = [];
+
+            for (const asn of asns) {
+                const prefixes = await fetchAsnData(asn);
+                networks = networks.concat(prefixes);
+            }
+
+            const aggregatedNetworks = aggregateNetworks(networks);
+            const routeIp = document.getElementById('route-ip').value;
+            const deleteCommands = aggregatedNetworks.map(network => `sudo route -n delete -net ${network} ${routeIp}`).join('\n');
+            document.getElementById('delete-commands').textContent = deleteCommands;
+        }
+
+        function copyToClipboard(elementId) {
+            const text = document.getElementById(elementId).textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Copied to clipboard');
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        }
+    </script>
+</body>
+</html>
