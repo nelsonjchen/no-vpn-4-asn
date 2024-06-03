@@ -24,7 +24,7 @@
     <script src="./ip-num.js"></script>
 
     <script>
-        const asns = ["AS32934", "AS13335"];
+        const asns = ["AS32934", "AS13335", "AS36459"];
         async function fetchAsnData(asn) {
             const response = await fetch(`https://prefixes-cors-proxy.cc.workers.dev/${asn}`);
             const data = await response.json();
