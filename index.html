@@ -35,7 +35,7 @@
             "AS36459"
         ];
         async function fetchAsnData(asn) {
-            const response = await fetch(`https://prefixes-cors-proxy.cc.workers.dev/${asn}`);
+            const response = await fetch(`https://prefixes-cors-proxy.mindflakes.com/${asn}`);
             const data = await response.json();
             return data.data.ipv4_prefixes.map(prefix => prefix.prefix);
         }
