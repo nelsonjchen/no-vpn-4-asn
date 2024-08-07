@@ -43,7 +43,8 @@ export default {
 		const bgpviewUrl = `https://api.bgpview.io/asn/${asn}/prefixes`;
 		const bgpviewResponse = await fetch(bgpviewUrl);
 		if (!bgpviewResponse.ok) {
-			return new Response("Failed to fetch data from bgpview.io.", {
+			return new Response(`Failed to fetch data from bgpview.io. \n
+${await bgpviewResponse.text()}`, {
 				status: 500,
 			});
 		}
