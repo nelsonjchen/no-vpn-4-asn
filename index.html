@@ -30,6 +30,7 @@
         // Cloudflare
         // Google Cloud
         // Google Cloud
+        // Microsoft
         // GitHub
         const asns = [
             "AS20473",
@@ -38,7 +39,8 @@
             "AS13335",
             "AS15169",
             "AS396982",
-            "AS36459"
+            "AS8075",
+            "AS36459",
         ];
         async function fetchAsnData(asn) {
             const response = await fetch(`https://prefixes-cors-proxy.mindflakes.com/${asn}`);
