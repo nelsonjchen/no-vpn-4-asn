@@ -87,10 +87,17 @@
         async function generateDeleteCommands() {
             let networks = [];
 
-            for (const asn of asns) {
-                const prefixes = await fetchAsnData(asn);
-                networks = networks.concat(prefixes);
-            }
+            // Use Promise.allSettled to fetch data for all ASNs concurrently
+            const fetchPromises = asns.map(asn => fetchAsnData(asn));
+            const settledPromises = await Promise.allSettled(fetchPromises);
+            // Concatenate all fetched prefixes in the original order
+            settledPromises.forEach((promise, index) => {
+              if (promise.status === 'fulfilled') {
+                networks = networks.concat(promise.value); 
+              } else {
+                console.error(`Error fetching data for ASN ${asns[index]}:`, promise.reason);
+              }
+            });
 
             const aggregatedNetworks = aggregateNetworks(networks);
             const routeIp = document.getElementById('route-ip').value;
