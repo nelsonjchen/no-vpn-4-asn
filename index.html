@@ -78,6 +78,7 @@
 
             for (const asn of asns) {
                 const prefixes = await fetchAsnData(asn);
+                await new Promise(f => setTimeout(f, 1000));
                 networks = networks.concat(prefixes);
             }
 
@@ -96,7 +97,7 @@
             // Concatenate all fetched prefixes in the original order
             settledPromises.forEach((promise, index) => {
               if (promise.status === 'fulfilled') {
-                networks = networks.concat(promise.value); 
+                networks = networks.concat(promise.value);
               } else {
                 console.error(`Error fetching data for ASN ${asns[index]}:`, promise.reason);
               }
