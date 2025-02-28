@@ -15,12 +15,12 @@
     <input type="text" id="route-ip" name="route-ip">
     <button onclick="generateCommands()">Generate Add Routes</button>
     <button onclick="generateDeleteCommands()">Generate Delete Routes</button>
+    <button class="copy-button" onclick="copyToClipboard('add-commands')">Copy Add Commands to Clipboard</button>
+    <button class="copy-button" onclick="copyToClipboard('delete-commands')">Copy Delete Commands to Clipboard</button>
     <h2>Add Routes</h2>
     <div id="add-commands" class="code-block"></div>
-    <button class="copy-button" onclick="copyToClipboard('add-commands')">Copy to Clipboard</button>
     <h2>Delete Routes</h2>
     <div id="delete-commands" class="code-block"></div>
-    <button class="copy-button" onclick="copyToClipboard('delete-commands')">Copy to Clipboard</button>
     <script src="./ip-num.js"></script>
 
     <script>
