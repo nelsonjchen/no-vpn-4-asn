@@ -12,5 +12,6 @@
     "start": "wrangler dev",
     "deploy": "wrangler deploy",
     "test": "vitest"
-  }
+  },
+  "packageManager": "pnpm@9.0.6"
 }

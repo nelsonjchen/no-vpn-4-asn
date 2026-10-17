@@ -41,7 +41,14 @@ export default {
 
 		// Fetch data from bgpview.io
 		const bgpviewUrl = `https://api.bgpview.io/asn/${asn}/prefixes`;
-		const bgpviewResponse = await fetch(bgpviewUrl);
+		const bgpviewResponse = await fetch(
+			bgpviewUrl,
+			{
+				headers: {
+					"User-Agent": "Mozilla/5.0",
+				}
+			}
+		);
 		if (!bgpviewResponse.ok) {
 			return new Response(`Failed to fetch data from bgpview.io. \n
 ${await bgpviewResponse.text()}`, {
